@@ -13,20 +13,25 @@ TEST_CASE("Small org\family")
     CHECK_NOTHROW(org.add_sub("ZTF", "MOG"));
     CHECK_NOTHROW(org.add_sub("MAL", "FER"));
 
-    CHECK_NOTHROW(org.add_root("CFO"));
-
     vector<string> names = {"CEO", "ZTF", "OPE", "MAL", "MOG", "FER"};
+    vector<string> reverse_names = {"MOG", "FER", "ZTF", "OPE", "MAL", "CEO"};
+
     size_t i = 0;
     for (auto it = org.begin_level_order(); it != org.end_level_order(); it++)
     {
-        CHECK_EQ(*it, names[i++]);
+        cout << *it << endl;
+        CHECK_EQ((*it), names[i++]);
     }
 
+    cout << " Finished loop 1" << endl;
+    i = 0 ;
     for (auto it = org.begin_reverse_order(); it != org.reverse_order(); it++)
     {
-        CHECK_EQ(*it, names[i--]);
+        cout << *it << endl;
+        CHECK_EQ((*it), reverse_names[i++]);
     }
 
+    CHECK_NOTHROW(org.add_root("CFO"));
     // Mos was never in the orgchart
     CHECK_THROWS(org.add_sub("MOS", "RON"));
     // ceo is deleted from org chart when root changed
@@ -34,12 +39,11 @@ TEST_CASE("Small org\family")
 
     OrgChart::Iterator iter = org.begin_preorder();
 
-    CHECK_NE(*iter, "CEO");
-    CHECK_EQ(*iter, "CFO");
+    CHECK_NE((*iter), "CEO");
+    CHECK_EQ((*iter), "CFO");
 
     CHECK_NOTHROW(iter++);
     CHECK_NOTHROW(cout << *iter);
-    CHECK(iter.size() == names.size());
 
     string a = "Moshe";
     string b = "Rami";
@@ -50,8 +54,8 @@ TEST_CASE("Small org\family")
     {
         string temp = a;
         a = b;
-        b = a;
+        b = temp;
 
-        CHECK_NOTHROW(org_b.add_sub(a,b));
+        CHECK_NOTHROW(org_b.add_sub(b, a));
     }
 }

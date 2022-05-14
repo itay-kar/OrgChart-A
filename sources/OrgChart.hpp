@@ -2,45 +2,54 @@
 #include <string>
 #include <vector>
 #include <stdlib.h>
+#include <queue>
+#include <stack>
+#include <memory>
+
 using namespace std;
 
 namespace ariel
 {
+    enum class Iter_Type
+    {
+        LEVEL,
+        REVERSE,
+        PREORDER
+    };
+
     class OrgChart
     {
-
+        // Inner class node;
         class Node
         {
-            string str;
-            vector<Node *> childrens;
-            Node *Papa;
+            string name;
 
         public:
             Node(){};
-            Node(string str){};
-            Node &add_father();
-            Node &add_children();
+            Node(string str);
+            void add_father(Node *node);
+            void add_children(Node *node);
             string get_data();
-            Node *get_papa();
-            void set_children(vector<Node *> childrens);
+            void set_data(string str);
             vector<Node *> get_children();
+            friend ostream &operator<<(ostream &os, Node &node)
+            {
+                os << node.name;
+                return os;
+            };
         };
-
-    private:
-        Node *root;
+    
 
     public:
         class Iterator;
-        OrgChart(){root = nullptr;};
+        OrgChart() {};
         OrgChart &add_root(string name);
         OrgChart &add_sub(string name, string name2);
         friend ostream &operator<<(ostream &os, const OrgChart &org);
 
-        auto begin() { return begin_level_order(); };
-        auto end() { return end_level_order(); };
-        
-            Iterator
-            begin_level_order();
+        Iterator begin();
+        Iterator end();
+        Iterator begin_level_order();
         Iterator end_level_order();
         Iterator begin_reverse_order();
         Iterator reverse_order();
@@ -49,13 +58,18 @@ namespace ariel
 
         class Iterator
         {
+            string empty = "";
+                    
         public:
             Iterator(){};
+            Iterator(Node *node);
+            Iterator(Node *root, Iter_Type type);
+            ~Iterator(){};
             string operator*();
-            friend bool operator!=(Iterator a, Iterator b);
+            friend bool operator!=(const Iterator &a, const Iterator &b);
             Iterator &operator++();
             Iterator &operator++(int);
-            Iterator *operator->();
+            string *operator->();
             int size();
         };
     };
