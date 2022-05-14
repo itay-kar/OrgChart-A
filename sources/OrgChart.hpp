@@ -59,12 +59,11 @@ namespace ariel
         class Iterator
         {
             string empty = "";
-                    
+
         public:
             Iterator(){};
             Iterator(Node *node);
             Iterator(Node *root, Iter_Type type);
-            ~Iterator(){};
             string operator*();
             friend bool operator!=(const Iterator &a, const Iterator &b);
             Iterator &operator++();
